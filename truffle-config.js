@@ -1,31 +1,56 @@
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
- * compilation and testing. Uncomment the ones you need or modify
+ * compilation, and testing. Uncomment the ones you need or modify
  * them to suit your project as necessary.
  *
  * More information about configuration can be found at:
  *
- * trufflesuite.com/docs/advanced/configuration
+ * https://trufflesuite.com/docs/truffle/reference/configuration
  *
- * To deploy via Infura you'll need a wallet provider (like @truffle/hdwallet-provider)
- * to sign your transactions before they're sent to a remote public node. Infura accounts
- * are available for free at: infura.io/register.
+ * Hands-off deployment with Infura
+ * --------------------------------
  *
- * You'll also need a mnemonic - the twelve word phrase the wallet uses to generate
- * public/private key pairs. If you're publishing your code to GitHub make sure you load this
- * phrase from a file you've .gitignored so it doesn't accidentally become public.
+ * Do you have a complex application that requires lots of transactions to deploy?
+ * Use this approach to make deployment a breeze 🏖️:
  *
+ * Infura deployment needs a wallet provider (like @truffle/hdwallet-provider)
+ * to sign transactions before they're sent to a remote public node.
+ * Infura accounts are available for free at 🔍: https://infura.io/register
+ *
+ * You'll need a mnemonic - the twelve word phrase the wallet uses to generate
+ * public/private key pairs. You can store your secrets 🤐 in a .env file.
+ * In your project root, run `$ npm install dotenv`.
+ * Create .env (which should be .gitignored) and declare your MNEMONIC
+ * and Infura PROJECT_ID variables inside.
+ * For example, your .env file will have the following structure:
+ *
+ * MNEMONIC = <Your 12 phrase mnemonic>
+ * PROJECT_ID = <Your Infura project id>
+ *
+ * Deployment with Truffle Dashboard (Recommended for best security practice)
+ * --------------------------------------------------------------------------
+ *
+ * Are you concerned about security and minimizing rekt status 🤔?
+ * Use this method for best security:
+ *
+ * Truffle Dashboard lets you review transactions in detail, and leverages
+ * MetaMask for signing, so there's no need to copy-paste your mnemonic.
+ * More details can be found at 🔎:
+ *
+ * https://trufflesuite.com/docs/truffle/getting-started/using-the-truffle-dashboard/
  */
-require("dotenv").config();
-const HDWalletProvider = require('@truffle/hdwallet-provider');
+
+// require('dotenv').config();
+// const { MNEMONIC, PROJECT_ID } = process.env;
+
+// const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
-
   /**
    * Networks define how you connect to your ethereum client and let you set the
    * defaults web3 uses to send transactions. If you don't specify one truffle
-   * will spin up a development blockchain for you on port 9545 when you
+   * will spin up a managed Ganache instance for you on port 9545 when you
    * run `develop` or `test`. You can ask a truffle command to use a specific
    * network from the command line, e.g
    *
@@ -33,370 +58,47 @@ module.exports = {
    */
 
   networks: {
-
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
-    // You should run a client (like ganache-cli, geth or parity) in a separate terminal
+    // You should run a client (like ganache, geth, or parity) in a separate terminal
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
-
-    development: {
-//      provider: function() {
-//        return new HDWalletProvider(process.env.MNEMONIC_TEST, `https://localhost:8545`);
-//      },
-      host: "127.0.0.1",     // Localhost (default: none)
-      port: 8545,            // Standard Ethereum port (default: none)
-      network_id: "*",       // Any network (default: none)
-      gas: 6700000,
-    },
-
-    // Useful for deploying to a public network.
-    // NB: It's important to wrap the provider as a function.
-    // ropsten: {
-    // provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/YOUR-PROJECT-ID`),
-    // network_id: 3,       // Ropsten's id
-    // gas: 5500000,        // Ropsten has a lower block limit than mainnet
-    // confirmations: 2,    // # of confs to wait between deployments. (default: 0)
-    // timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-    // skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    //
+    // development: {
+    //  host: "127.0.0.1",     // Localhost (default: none)
+    //  port: 8545,            // Standard Ethereum port (default: none)
+    //  network_id: "*",       // Any network (default: none)
     // },
-
+    //
+    // An additional network, but with some advanced options…
+    // advanced: {
+    //   port: 8777,             // Custom port
+    //   network_id: 1342,       // Custom network
+    //   gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
+    //   gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
+    //   from: <address>,        // Account to send transactions from (default: accounts[0])
+    //   websocket: true         // Enable EventEmitter interface for web3 (default: false)
+    // },
+    //
+    // Useful for deploying to a public network.
+    // Note: It's important to wrap the provider as a function to ensure truffle uses a new provider every time.
+    // goerli: {
+    //   provider: () => new HDWalletProvider(MNEMONIC, `https://goerli.infura.io/v3/${PROJECT_ID}`),
+    //   network_id: 5,       // Goerli's id
+    //   confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
+    //   timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+    //   skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    // },
+    //
     // Useful for private networks
     // private: {
-    // provider: () => new HDWalletProvider(mnemonic, `https://network.io`),
-    // network_id: 2111,   // This network is yours, in the cloud.
-    // production: true    // Treats this network as if it was a public net. (default: false)
+    //   provider: () => new HDWalletProvider(MNEMONIC, `https://network.io`),
+    //   network_id: 2111,   // This network is yours, in the cloud.
+    //   production: true    // Treats this network as if it was a public net. (default: false)
     // }
-
-    // Infura Endpoints (requires INFURA_API_KEY in .env)
-
-    // Ethereum
-    ETH: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 1,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Ethereum Testnet, Goerli
-    ETHTest: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 5,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Optimism Main
-    OP: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://optimism-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 10,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Op Test on Goerli
-    OPTest:{
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://optimism-goerli.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 1056,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Arb Main
-    ARB: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://arbitrum-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 42161,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Arb Test on Goerli
-    ARBTest:{
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://arbitrum-goerli.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 421613,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Poly/Matic
-    Matic: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://polygon-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 137,
-      gasPrice: 375000000000, // 375 gwei
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Poly/Matic Test (mumbai)
-    MaticTest: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 80001,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Celo
-    Celo: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://celo-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 42220,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Celo Test (alfajores)
-    CeloTest: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://celo-alfajores.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 44787,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Palm
-    Palm: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://palm-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 11297108109,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Palm Test ()
-    PalmTest: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://palm-testnet.infura.io/v3/${process.env.INFURA_API_KEY}`);
-      },
-      network_id: 11297108099,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Network hosted RPC's
-
-    // Avax
-    AVAX: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, "https://api.avax.network/ext/bc/C/rpc");
-      },
-      network_id: 43114,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Avax-Test
-    AVAXTest: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, "https://api.avax-test.network/ext/bc/C/rpc");
-      },
-      network_id: 43113,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Cronos
-    CRO: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, "https://evm.cronos.org/");
-      },
-      network_id: 25,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Cronos Testnet
-    CROTest: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, "https://evm-t3.cronos.org");
-      },
-      network_id: 338,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Kava
-    KAVA: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, "https://evm.kava.io");
-      },
-      network_id: 2222,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true,
-      verify: {
-        apiUrl: 'https://explorer.kava.io/api',
-        apiKey: "none",
-        explorerUrl: 'https://explorer.kava.io',
-      },
-    },
-
-    // Kava Testnet
-    KAVATest: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, "https://evm.testnet.kava.io");
-      },
-      network_id: 2221,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true,
-      verify: {
-        apiUrl: 'https://explorer.testnet.kava.io/api',
-        apiKey: "none",
-        explorerUrl: 'https://explorer.testnet.kava.io',
-      },
-    },
-
-    // Canto
-    CANTO: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, "https://canto.slingshot.finance");
-      },
-      network_id: 7700,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true,
-      verify: {
-        apiUrl: 'https://evm.explorer.canto.io/api',
-        apiKey: "none",
-        explorerUrl: 'https://evm.explorer.canto.io/',
-      },
-    },
-
-    // Canto Testnet
-    CANTOTest: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, "https://eth.plexnode.wtf");
-      },
-      network_id: 740,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true,
-      verify: {
-        apiUrl: 'https://testnet-explorer.canto.neobase.one/api',
-        apiKey: "none",
-        explorerUrl: 'https://testnet-explorer.canto.neobase.one/',
-      },
-    },
-
-    // ANKR RPC's (defaults kind of blow)
-
-    // BSC
-    BSC: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://rpc.ankr.com/bsc`);
-      },
-      network_id: 56,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // BSC Testnet (Chapel)
-    BSCTest: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://rpc.ankr.com/bsc_testnet_chapel`);
-      },
-      network_id: 97,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // BTT
-    BTT: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, `https://rpc.ankr.com/bttc`);
-      },
-      network_id: 199,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // BTT Testnet (no testnet found but got chain ID)
-    BTTTest: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, ``);
-      },
-      network_id: 1028,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // FTM
-    FTM: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, "https://rpc.fantom.tools");
-      },
-      network_id: 250,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // FTM testnet
-    FTMTest: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, "https://rpc.ankr.com/fantom_testnet");
-      },
-      network_id: 4002,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
-    // Moonbeam https://rpc.ankr.com/moonbeam
-    Moonbeam: {
-      provider: function() {
-        return new HDWalletProvider(process.env.MNEMONIC, "https://rpc.ankr.com/moonbeam");
-      },
-      network_id: 1284,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true
-    },
-
   },
 
-
-
-  // Set default mocha options here, use special reporters etc.
+  // Set default mocha options here, use special reporters, etc.
   mocha: {
     // timeout: 100000
   },
@@ -404,37 +106,17 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "^0.8.15",    // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.8.18",      // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
-      settings: {          // See the solidity docs for advice about optimization and evmVersion
-        optimizer: {
-          enabled: true,
-          runs: 10000
-        }
+      // settings: {          // See the solidity docs for advice about optimization and evmVersion
+      //  optimizer: {
+      //    enabled: false,
+      //    runs: 200
+      //  },
       //  evmVersion: "byzantium"
-      }
+      // }
     }
   },
-
-  plugins: [
-    'truffle-plugin-verify',
-    'truffle-plugin-stdjsonin',
-  ],
-
-  api_keys: {
-    etherscan: process.env.ETHERSCAN_API_KEY,
-    optimistic_etherscan: process.env.OP_API_KEY,
-    arbiscan: process.env.ARB_API_KEY,
-    bscscan: process.env.BSCSCAN_API_KEY,
-    snowtrace: process.env.AVAX_API_KEY,
-    polygonscan: process.env.POLY_API_KEY,
-    ftmscan: process.env.FTM_API_KEY,
-    //hecoinfo: 'MY_API_KEY',
-    moonscan: process.env.MOON_API_KEY,
-    bttcscan: process.env.BTT_API_KEY,
-    //aurorascan: 'MY_API_KEY',
-    cronoscan: process.env.CRONOS_API_KEY,
-  }
 
   // Truffle DB is currently disabled by default; to enable it, change enabled:
   // false to enabled: true. The default storage location can also be
@@ -447,16 +129,13 @@ module.exports = {
   // $ truffle migrate --reset --compile-all
   //
   // db: {
-    // enabled: false,
-    // host: "127.0.0.1",
-    // adapter: {
-    //   name: "sqlite",
-    //   settings: {
-    //     directory: ".db"
-    //   }
-    // }
+  //   enabled: false,
+  //   host: "127.0.0.1",
+  //   adapter: {
+  //     name: "indexeddb",
+  //     settings: {
+  //       directory: ".db"
+  //     }
+  //   }
   // }
 };
-
-
-
